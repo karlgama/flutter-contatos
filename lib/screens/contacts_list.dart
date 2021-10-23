@@ -1,23 +1,28 @@
+import 'package:bytebank_contatos/database/app_database.dart';
 import 'package:bytebank_contatos/models/contact.dart';
 import 'package:bytebank_contatos/screens/contact_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatelessWidget {
-  final List<Contact> contacts = [];
-
   @override
   Widget build(BuildContext context) {
-    contacts.add(Contact(1, 'Dino', 100));
     return Scaffold(
       appBar: AppBar(
         title: Text('Contacts'),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          final Contact contact = contacts[index];
-          return _ContactItem(contact);
+      body: FutureBuilder(
+        initialData: [],
+        future: findAll(),
+        builder: (context, snapshot) {
+          final List<Contact> contacts = snapshot.data as List<Contact>;
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final Contact contact = contacts[index];
+              return _ContactItem(contact);
+            },
+            itemCount: contacts.length,
+          );
         },
-        itemCount: contacts.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
