@@ -4,10 +4,13 @@ import 'package:sqflite/sqflite.dart';
 
 Future<Database> createDatabase() {
   return getDatabasesPath().then((dbPath) {
-    final String path = join(dbPath, 'bytebank.db');
+    //alguma_coisa.db é o nome do banco, mudado para fins de teste
+    final String path = join(dbPath, 'outrdddo.db');
     return openDatabase(path, onCreate: (db, version) {
-      db.execute(
-          "CREATE TABLE contacts('id INTEGER PRIMARY KEY,''name TEXT, ''account_number INTEGER, ' )");
+      db.execute('CREATE TABLE contacts('
+          'id INTEGER PRIMARY KEY, '
+          'name TEXT, '
+          'account_number INTEGER)');
     }, version: 1);
   });
 }
@@ -15,9 +18,8 @@ Future<Database> createDatabase() {
 Future<int> save(Contact contact) {
   return createDatabase().then((db) {
     final Map<String, dynamic> contactMap = Map();
-    contactMap['id'] = contact.id;
     contactMap['name'] = contact.name;
-    contactMap['accountNumber'] = contact.accountNumber;
+    contactMap['account_number'] = contact.accountNumber;
 
     return db.insert('contacts', contactMap);
   });
@@ -31,7 +33,7 @@ Future<List<Contact>> findAll() {
         final Contact contact = Contact(
           map['id'],
           map['name'],
-          map['accountNumber'],
+          map['account_number'],
         );
         contacts.add(contact);
       }
