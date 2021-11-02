@@ -10,21 +10,36 @@ class ContactsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Contacts'),
       ),
-      body: FutureBuilder<List<dynamic>>(
+      body: FutureBuilder<List<Contact>>(
         initialData: [],
         future: findAll(),
         builder: (context, snapshot) {
-          final List<dynamic>? contacts = snapshot.data;
-          if (contacts == null) {
-            debugPrint('nulo');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Colors.blue[300],
+                    ),
+                    Text('Carregando...')
+                  ],
+                ),
+              );
+            case ConnectionState.done:
+              final List<Contact>? contacts = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final Contact contact = contacts![index];
+                  return _ContactItem(contact);
+                },
+                itemCount: contacts!.length,
+              );
+            default:
+              return Text('Unknown error');
           }
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final Contact contact = contacts![index];
-              return _ContactItem(contact);
-            },
-            itemCount: contacts!.length,
-          );
         },
       ),
       floatingActionButton: FloatingActionButton(
