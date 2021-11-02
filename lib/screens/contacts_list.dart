@@ -10,17 +10,20 @@ class ContactsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Contacts'),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<dynamic>>(
         initialData: [],
         future: findAll(),
         builder: (context, snapshot) {
-          final List<Contact> contacts = snapshot.data as List<Contact>;
+          final List<dynamic>? contacts = snapshot.data;
+          if (contacts == null) {
+            debugPrint('nulo');
+          }
           return ListView.builder(
             itemBuilder: (context, index) {
-              final Contact contact = contacts[index];
+              final Contact contact = contacts![index];
               return _ContactItem(contact);
             },
-            itemCount: contacts.length,
+            itemCount: contacts!.length,
           );
         },
       ),
