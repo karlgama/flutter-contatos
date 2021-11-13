@@ -5,13 +5,18 @@ import 'package:sqflite/sqflite.dart';
 Future<Database> createDatabase() {
   return getDatabasesPath().then((dbPath) {
     //alguma_coisa.db é o nome do banco, mudado para fins de teste
-    final String path = join(dbPath, 'fff.db');
-    return openDatabase(path, onCreate: (db, version) {
-      db.execute('CREATE TABLE contacts('
-          'id INTEGER PRIMARY KEY, '
-          'name TEXT, '
-          'account_number INTEGER)');
-    }, version: 1);
+    final String path = join(dbPath, 'mm.db');
+    return openDatabase(
+      path,
+      onCreate: (db, version) {
+        db.execute('CREATE TABLE contacts('
+            'id INTEGER PRIMARY KEY, '
+            'name TEXT, '
+            'account_number INTEGER)');
+      },
+      version: 1,
+      // onDowngrade: onDatabaseDowngradeDelete,
+    );
   });
 }
 
